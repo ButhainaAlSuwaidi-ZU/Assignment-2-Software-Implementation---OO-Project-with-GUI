@@ -1,0 +1,352 @@
+from datetime import date
+from enum import Enum
+
+#creating the first class
+class DentalCompany:
+    def __init__(self):
+        self.branches = [] #so we can put the new branches here
+
+    def addBranch(self, newBranch): #adding the branch
+        self.branches.append(newBranch)
+
+    #branch information we can print, they are defined below
+    def displayBranches(self):
+        for branch in self.branches:
+            print("Branch name: ", branch.getBranchName())
+            print("Address: ", branch.getBranchAddress())
+            print("Phone: ", branch.getBranchPhone())
+            print("Manager: ", branch.getBranchManager().getManagerName())
+
+#the class for the branch
+class DentalBranch:
+    def __init__(self, name, address, phone, manager):
+        self.name = name
+        self.address = address
+        self.phone = phone
+        self.manager = manager
+
+    #setting and getting the branch information
+    def setBranchAddress(self, newBranchAddress):
+        self.address = newBranchAddress
+    def getBranchAddress(self):
+        return self.address
+
+    def setBranchPhone(self, newBranchPhone):
+        self.phone = newBranchPhone
+    def getBranchPhone(self):
+        return self.phone
+
+    def setBranchName(self, newBranchName):
+        self.name = newBranchName
+    def getBranchName(self):
+        return self.name
+
+    def setBranchManager(self, newBranchManager):
+        self.manager = newBranchManager
+    def getBranchManager(self):
+        return self.manager
+
+#the manager class so we can create them and assign them to branches
+class Manager:
+    def __init__(self, name, ID, email):
+        self.name = name
+        self.ID = ID
+        self.email = email
+        self.branch = None
+
+#setters and getters that are relevant including the name, ID, email and so on
+    def setManagerName(self, newManagerName):
+        self.name = newManagerName
+    def getManagerName(self):
+        return self.name
+
+    def setManagerID(self, newManagerID):
+        self.ID = newManagerID
+    def getManagerID(self):
+        return self.ID
+
+    def setManagerEmail(self, newManagerEmail):
+        self.email = newManagerEmail
+    def getManagerEmail(self):
+        return self.email
+
+#this is so we can assign a manager to a branch
+    def assignBranch(self, branch):
+        self.branch = branch
+
+#this is an enum for the staff since there are only little
+class StaffRole(Enum):
+    DENTIST = "Dentist"
+    HYGIENIST = "Hygienist"
+    RECEPTIONIST = "Receptionist"
+
+# the staff class, we can assign patients to staff and print staff info
+class Staff:
+    def __init__(self, name, staffRole, staffID, branch):
+        self.name = name
+        self.staffRole = staffRole
+        self.staffID = staffID
+        self.branch = branch
+        self.assignedPatient = None
+        self.assignedBranch = None
+        self.patients = []
+
+#the setters and getters for the staff
+    def setStaffName(self, newStaffName):
+        self.name = newStaffName
+    def getStaffName(self):
+        return self.name
+
+    def setStaffRole(self, newStaffRole):
+        self.staffRole = newStaffRole
+    def getStaffRole(self):
+        return self.staffRole
+
+    def setStaffID(self, newStaffID):
+        self.staffID = newStaffID
+    def getStaffID(self):
+        return self.staffID
+
+#here we are assigning a patient to a staff
+    def assignPatientToStaff(self, patient):
+        self.patients.append(patient)
+
+#and here we are assigning the staff to the branch
+    def assignStaffToBranch(self, branch):
+        self.assignedBranch = branch
+
+    def getBranch(self):
+        return self.branch
+
+#this is an important function, as we have a lot of information including the patients
+    #that each staff member is responsible for
+    def displayStaffInfo(self):
+        print("Staff Information: ")
+        print("Staff Name: ", self.getStaffName())
+        print("Staff Role: ", self.getStaffRole())
+        print("Staff ID: ", self.getStaffID())
+        print("Branch Located In: ", self.getBranch())
+
+        #this is a list incase we have many patients per
+        #staff member
+        if len(self.patients) > 0:
+            print("Assigned Patients: ")
+            for patient in self.patients:
+                print(patient.getPatientName())
+        else:
+            print("No patients are assigned to this staff member.")
+
+#patient class
+class Patient:
+    def __init__(self, name, phone, address):
+        self.name = name
+        self.phone = phone
+        self.address = address
+        self.selectedService = None
+
+#setters and getters
+    def setPatientName(self, newPatientName):
+        self.name = newPatientName
+    def getPatientName(self):
+        return self.name
+
+    def setPatientPhone(self, newPatientPhone):
+        self.phone = newPatientPhone
+    def getPatientPhone(self):
+        return self.phone
+
+    def setPatientAddress(self, newPatientAddress):
+        self.address = newPatientAddress
+    def getPatientAddress(self):
+        return self.address
+
+#this function is so that a patient can book an appointment
+    def bookAppointment(self, date, staff, service):
+        appt = Appointment(date, staff, service)
+        print("Appointment Booked ", appt)
+        return appt
+
+#this is an appointment class from which the patients can book from
+class Appointment:
+    def __init__(self, appointmentDate, patient, staff):
+        self.date = appointmentDate
+        self.patient = patient
+        self.staff = staff
+        self.service = None
+
+#the setters and getters
+    def setAppointmentDate(self, newAppointmentDate):
+        self.date = newAppointmentDate
+    def getAppointmentDate(self):
+        return self.date
+
+    def setPatient(self, newPatient):
+        self.patient = newPatient
+    def getPatient(self):
+        return self.patient
+
+    def setStaff(self, newStaff):
+        self.staff = newStaff
+    def getStaff(self):
+        return self.staff
+
+#this is to display the information, this is also important,
+    #we display the name, date of appointment and other relavent information
+    def displayAppointmentInfo(self):
+        print("Appointment Information: ")
+        print("Patient Name: ", self.patient.getPatientName())
+        print("Date: ", self.getAppointmentDate())
+        print("Staff Name: ", self.staff.getStaffName())
+
+#service class with setters and getters
+class Service:
+    def __init__(self, serviceName, cost):
+        self.name = serviceName
+        self.cost = cost
+
+    def setService(self, newServiceName):
+        self.name = newServiceName
+    def getService(self):
+        return self.name
+
+    def setCost(self, newCost):
+        self.cost = newCost
+    def getCost(self):
+        return self.cost
+
+#checkout class where we can checkout the customers
+#this and teh staff class are the most important,
+#they include a lot of important information
+class Checkout:
+    def __init__(self, services, patient, taxRate):
+        self.services = services
+        self.patient = patient
+        self.taxRate = taxRate
+        self.taxAmount = 0.0
+
+#first we set and get the services, the patient name and the taxrate
+    def setServices(self, services):
+        self.services = services
+    def getServices(self):
+        return self.services
+
+    def setPatientName(self, newPatientName):
+        self.patientName = newPatientName
+    def getPatientName(self):
+        return self.patientName
+
+    def setTaxRate(self, newTaxRate):
+        self.taxRate = newTaxRate
+    def getTaxRate(self):
+        return self.taxRate
+
+#then we calculate the total cost and we round
+    def calculateTotalCost(self):
+        totalCost = self.services.getCost()
+        self.taxAmount = round(totalCost * self.taxRate, 2)
+        return totalCost + self.taxAmount
+
+#next we print the receipt
+    def printReceipt(self):
+        print("Receipt: ")
+        print("Customer: ", self.patient.getPatientName())
+        print("Service Name: ", self.services.getService())
+        print("Service Price: AED", self.services.getCost())
+        print("Tax Rate: ", self.taxRate)
+        print("Total Costs: ", self.calculateTotalCost())
+
+#now we can move on to testing the code
+''' Test Case 1: Dental Company, Branch and Manger Manipulation'''
+
+#creating the company
+Bright_Smiles = DentalCompany()
+
+#creating the branches
+branch1 = DentalBranch("Bright Smiles: London, UK", "there-is-still-much-to-come Street 3454", 2132341, Manager("Balckbeard", "4dw543", "BB@BrightSmiles.com"))
+branch2 = DentalBranch("Bright Smiles: Phuket, Thailand", "are-you-winning-son Street 4", 3343431, Manager("Uthred Ragnarson", "21243da5", "uthredrag@BrightSmiles.com"))
+
+#adding the branches to the company
+Bright_Smiles.addBranch(branch1)
+Bright_Smiles.addBranch(branch2)
+
+#displaying the information
+Bright_Smiles.displayBranches()
+
+#adding the manager
+manager = branch1.getBranchManager()
+manager.setManagerName("Leofric")
+
+print()
+print()
+
+
+'''Test Case 2: Patients Booking Appointments'''
+
+#create a service for whitening
+whiteningService = Service("Whitening", 200)
+cleaningService = Service("Cleaning", 100)
+
+#creating staff
+staff1 = Staff("Alfred", StaffRole.HYGIENIST, "1waw22fsd", "UK Branch")
+staff2 = Staff("Odda", StaffRole.DENTIST,"3242432fsd,", "Thailand Branch")
+
+#creating patients
+patient1 = Patient("Edna Mode", "0980870", "Super Street")
+patient2 = Patient("Clark Kent", "232342423", "NotSuperman Street")
+
+#and appointments
+appt1 = Appointment("2056-01-11 11:00", patient1, staff1)
+appt2 = Appointment("2056-01-11 15:00", patient2, staff2)
+
+
+#have the patients book an appointment
+patient1.bookAppointment("2056-01-11", whiteningService, "Odda")
+appt1.displayAppointmentInfo()
+
+print()
+print()
+
+#display info
+patient2.bookAppointment("2056-01-12", cleaningService, "Alfred")
+appt2.displayAppointmentInfo()
+
+print()
+print()
+
+'''Test Case 3: Staff, Patients, Branches Manipulation'''
+
+#creating more staff, patients and branches
+staff3 = Staff("CocoChanel", StaffRole.RECEPTIONIST, "9089ndw", "Denmark Branch")
+patient3 = Patient("Gucci", "3242342", "BestBrand Street")
+branch3 = DentalBranch("Bright Smiles: Denmark", "cold street", 23213, Manager("Babenberg", "31313dada", "northumbria@BrightSmiles.com"))
+
+#assigning patrients to staff and staff to branches
+staff3.assignPatientToStaff(patient3)
+staff3.assignStaffToBranch(branch3)
+
+staff2.displayStaffInfo()
+print()
+staff3.displayStaffInfo()
+
+print()
+print()
+
+'''Test Case 4: Checkout and Receipts'''
+
+#define some services
+service1 = Service("Teeth Cleaning", 50.00)
+service2 = Service("Whitening", 100.00)
+
+#define a patient
+patient1 = Patient("Christian", "Ronaldo", "0099827")
+patient2 = Patient("Messi", "Christian", "122121")
+
+#create a checkout for the patient and services
+checkout1 = Checkout(service1, patient1, 0.05)
+checkout2 = Checkout(service2, patient2, 0.05)
+
+
+#print the receipt
+checkout1.printReceipt()
+print()
+checkout2.printReceipt()
